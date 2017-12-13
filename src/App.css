@@ -1,0 +1,29 @@
+.App {
+  text-align: center;
+  font-family: sans-serif;
+}
+
+.App-header {
+  background-color: rgb(116, 72, 185);
+  height: 50px;
+  padding: 20px;
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.gallery {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.tile img{
+  max-width: 20rem;
+  padding: 0.5rem;
+}
