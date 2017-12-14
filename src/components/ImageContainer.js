@@ -10,10 +10,10 @@ export default class ImageContainer extends Component {
         this.state = {
             images: [],
             editingImageId: null,
-            notification:''
+            formExists: false
         }
 
-        this.addNewImage = this.addNewImage.bind(this);
+        this.openForm = this.openForm.bind(this);
 
     }
 
@@ -25,78 +25,50 @@ export default class ImageContainer extends Component {
             .catch(error => console.log(error));
     }
 
-    addNewImage = () => {
-        axios.post(
-            'http://localhost:1088/images',
-            {
-                image:
-                    {
-                        url: '',
-                        alt: '',
-                        caption: ' '
-                    }
-            }
-        )
-            .then(response => {
-                console.log(response);
-                //make a new copy of this.state.images and use the $splice command to insert the new image (in response.data) at the 0th index of this array
-                const images = update(this.state.images, {
-                    $splice: [[0, 0, response.data]]
-                });
-                //use this new images array to update the state
-                this.setState({
-                    images: images,
-                    editingImageId: response.data.id
-                });
-            })
-            .catch(error => console.log(error))
-    };
-
-    //find index of the edited idea in the array and use $set to replace the old value with the new one
-    updateImage= (image)=>{
-        const imageIndex = this.state.images.findIndex(x => x.id === image.id);
-        const images = update(this.state.images, {
-            [imageIndex]: {$set: image}
-        });
-        this.setState({
-            images:images,
-        notification: 'All changes saved'});
+    openForm=()=>{
+        this.setState({formExists: true});
     }
 
-    resetNotification=()=>{
-        this.setState({notification:''});
+    //find index of the edited idea in the array and use $set to replace the old value with the new one
+    updateImage = (image) => {
+        const imageIndex = this.state.images.findIndex(x => x.id === image.id);
+        const images = update(this.state.images, {
+            [imageIndex]: { $set: image }
+        });
+        this.setState({
+            images: images
+        });
     }
 
     render() {
-        return (
+        let newImageForm;
+
+        if (this.state.formExists) {
+            newImageForm = (
+                <ImageForm />
+            );
+        } else {
+            newImageForm = (null);
+        };
+
+    return(
             <div>
                 <button className="new-image-button"
-                    onClick={this.addNewImage} >
+                    onClick={this.openForm} >
                     New Image
                 </button>
-                <span className="notification">
-                    {this.state.notification}
-                </span>
+                
+                { newImageForm }
 
                 <div className="gallery">
                     {this.state.images.map((image) => {
-                        if (this.state.editingImageId === image.id) {
-                            return (<ImageForm 
-                                        image={image} 
-                                        key={image.id}
-                                        updateImage={this.updateImage}
-                                        resetNotification={this.resetNotification} />)
-                        } else {
-                            return (
-                                <Image image={image} key={image.id} />
-                            )
-                        }
-
+                        return(
+                            <Image image={image} key={image.id} />
+                        )
                     })}
                 </div>
-
             </div>
 
         )
-    }
+}
 }
