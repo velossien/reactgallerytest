@@ -26,9 +26,8 @@ class ImageForm extends Component{
             caption: this.state.caption
         }
 
-        console.log(image);
         axios.post(
-            `http://localhost:1088/images`,
+            'http://localhost:1088/images',
             {
                 image:image
             })
@@ -40,8 +39,7 @@ class ImageForm extends Component{
                 });
                 //use this new images array to update the state
                 this.setState({
-                    images: images,
-                    editingImageId: response.data.id
+                    images: images
                 });
             })
             .catch(error => console.log(error))
@@ -57,18 +55,21 @@ class ImageForm extends Component{
                         type="text" 
                         name="url" 
                         placeholder="Enter the URL of your image."
+                        value={this.state.url}
                         onChange= {this.handleInput}
                         />
                     <textarea 
                         className="input" 
                         name="alt" 
                         placeholder="Alternative text for your image"
+                        value={this.state.alt}
                         onChange= {this.handleInput}
                         />
                     <textarea 
                         className="input" 
                         name="caption" 
                         placeholder="Caption for your image"
+                        value={this.state.caption}
                         onChange= {this.handleInput}
                         />
                     <button
