@@ -25,18 +25,20 @@ export default class ImageContainer extends Component {
             .catch(error => console.log(error));
     }
 
-    openForm=()=>{
-        this.setState({formExists: true});
+    openForm = () => {
+        this.setState({ formExists: true });
     }
 
     //find index of the edited idea in the array and use $set to replace the old value with the new one
     updateImage = (image) => {
-        const imageIndex = this.state.images.findIndex(x => x.id === image.id);
+        //make a new copy of this.state.images and use the $splice command to insert the new image (in response.data) at the 0th index of this array
         const images = update(this.state.images, {
-            [imageIndex]: { $set: image }
+            $splice: [[0, 0, image]]
         });
+        //use this new images array to update the state
         this.setState({
-            images: images
+            images: images,
+            formExists: false
         });
     }
 
@@ -45,30 +47,32 @@ export default class ImageContainer extends Component {
 
         if (this.state.formExists) {
             newImageForm = (
-                <ImageForm />
+                <ImageForm
+                    updateImage={this.updateImage} />
             );
         } else {
             newImageForm = (null);
         };
 
-    return(
+        return (
             <div>
                 <button className="new-image-button"
                     onClick={this.openForm} >
-                    New Image
+                    Add a Nick
                 </button>
-                
-                { newImageForm }
+
+                {newImageForm}
 
                 <div className="gallery">
                     {this.state.images.map((image) => {
-                        return(
-                            <Image image={image} key={image.id} />
+                        return (
+                            <Image image={image}
+                                   key={image.id} />
                         )
                     })}
                 </div>
             </div>
 
         )
-}
+    }
 }

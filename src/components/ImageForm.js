@@ -26,21 +26,24 @@ class ImageForm extends Component{
             caption: this.state.caption
         }
 
+
         axios.post(
             'http://localhost:1088/images',
             {
                 image:image
             })
             .then(response => {
-                console.log(response);
-                //make a new copy of this.state.images and use the $splice command to insert the new image (in response.data) at the 0th index of this array
-                const images = update(this.state.images, {
-                    $splice: [[0, 0, response.data]]
-                });
-                //use this new images array to update the state
-                this.setState({
-                    images: images
-                });
+                console.log("response");
+                console.log(response.data);
+                this.props.updateImage(response.data);
+                // //make a new copy of this.state.images and use the $splice command to insert the new image (in response.data) at the 0th index of this array
+                // const images = update(this.state.images, {
+                //     $splice: [[0, 0, response.data]]
+                // });
+                // //use this new images array to update the state
+                // this.setState({
+                //     images: images
+                // });
             })
             .catch(error => console.log(error))
     };
@@ -73,6 +76,7 @@ class ImageForm extends Component{
                         onChange= {this.handleInput}
                         />
                     <button
+                        type="button"
                         className="submit"
                         onClick={this.handleSubmit}>
                         Create Image
