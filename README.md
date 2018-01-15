@@ -1,4 +1,4 @@
-#README
+# README
 
 ## A simple image gallery powered by React.
 
